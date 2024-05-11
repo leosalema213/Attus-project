@@ -3,8 +3,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.beans.BeanUtils;
+import br.com.leosalema.dto.PessoaDTO;
 
+import br.com.leosalema.service.EnderecoService;
+import br.com.leosalema.service.PessoaService;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import org.springframework.beans.BeanUtils;
 
 @Entity
 @Table(name = "TB_PESSOA")
@@ -29,17 +32,22 @@ public class PessoaEntity {
 	@OneToMany
 	@JoinColumn(name = "ID_ENDERECO")
 	private List<EnderecoEntity> listaEnderecos;
+
 	
-	public PessoaEntity(PessoaEntity pessoa) {
+	public PessoaEntity(PessoaDTO pessoa) {
 		BeanUtils.copyProperties(pessoa, this);
-		if(pessoa != null && pessoa.getListaEndereco() != null) {
-			this.listaEnderecos = new ArrayList<>(pessoa.getListaEndereco());
+		listaEnderecos = new ArrayList<>();
+
+		if(pessoa.getListaEnderecos() != null) {
+
+			this.listaEnderecos = pessoa.getListaEnderecos();
 		}
-		
 	}
-	
-	public PessoaEntity() {}
-	
+
+	public PessoaEntity() {
+		this.listaEnderecos = new ArrayList<>();
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -69,8 +77,12 @@ public class PessoaEntity {
 		return listaEnderecos;
 	}
 
-	public void setListaEndereco(List<EnderecoEntity> listaEnderecos) {
-		this.listaEnderecos = listaEnderecos;
+	public void setListaEndereco(EnderecoEntity endereco) {
+		this.listaEnderecos.add(endereco);
+	}
+
+	public void setListaEndereco(List<EnderecoEntity> endereco) {
+		this.listaEnderecos = endereco;
 	}
 
 	@Override
@@ -88,6 +100,5 @@ public class PessoaEntity {
 		PessoaEntity other = (PessoaEntity) obj;
 		return Objects.equals(nomeCompleto, other.nomeCompleto);
 	}
-	
-	
+
 }

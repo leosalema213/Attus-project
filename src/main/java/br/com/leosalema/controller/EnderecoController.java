@@ -2,6 +2,7 @@ package br.com.leosalema.controller;
 
 import java.util.List;
 
+import br.com.leosalema.dto.EnderecoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,18 +27,21 @@ public class EnderecoController {
 	private EnderecoService enderecoService;
 	
 	@GetMapping
-	public List<EnderecoEntity> listarTodos() {
+	public List<EnderecoDTO> listarTodos() {
 		return enderecoService.listarTodos();
 	}
 	
 	@PostMapping
-	public void inserir(@RequestBody EnderecoEntity enderco){
-		enderecoService.inserir(enderco);
+	public EnderecoDTO inserir(@RequestBody EnderecoDTO endereco){
+		enderecoService.inserir(endereco);
+		return endereco;
+
 	}
 	
 	@PutMapping
-	public EnderecoEntity alterar(@RequestBody EnderecoEntity endereco) {
-		return enderecoService.alterar(endereco);
+	public ResponseEntity<Void> alterar(@RequestBody EnderecoDTO endereco) {
+		enderecoService.alterar(endereco.getId(), endereco);
+		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping("/{id}")

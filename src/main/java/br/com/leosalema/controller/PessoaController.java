@@ -2,7 +2,11 @@ package br.com.leosalema.controller;
 
 import java.util.List;
 
+import br.com.leosalema.dto.EnderecoDTO;
+import br.com.leosalema.dto.PessoaDTO;
+import br.com.leosalema.service.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,25 +28,27 @@ public class PessoaController {
 	 
 	@Autowired
 	private PessoaService pessoaService;
-	
+
+
+	@Autowired
+	private EnderecoService enderecoService;
+
 	@GetMapping
-	public List<PessoaEntity>  listarTodos() {
-		return pessoaService.listarTodos();
-	}
-	
-	@GetMapping("/{id}")
-	public PessoaEntity listarPorId(@PathVariable("id") Long id) {
-		return pessoaService.buscarPorId(id);
+	public ResponseEntity<List<PessoaDTO> > listarTodos() {
+		return new ResponseEntity<>(pessoaService.listarTodos(), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public void inserir(@RequestBody PessoaEntity pessoa) {
-		pessoaService.inserir(pessoa);
+	public ResponseEntity<PessoaDTO> inserir(@RequestBody PessoaDTO pessoa) {
+		PessoaDTO newPessoa = pessoaService.inserir(pessoa);
+
+		return new ResponseEntity<>(newPessoa, HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public PessoaEntity alterar(@RequestBody PessoaEntity pessoa) {
-		return pessoaService.alterar(pessoa);
+	public ResponseEntity<Void> alterar(@RequestBody PessoaDTO pessoa) {
+		pessoaService.alterar(pessoa.getId(), pessoa);
+		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping("/{id}")

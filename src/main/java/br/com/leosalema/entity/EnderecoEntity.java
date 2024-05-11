@@ -1,5 +1,6 @@
 package br.com.leosalema.entity;
 
+import br.com.leosalema.dto.EnderecoDTO;
 import org.springframework.beans.BeanUtils;
 
 import jakarta.persistence.Column;
@@ -18,7 +19,7 @@ public class EnderecoEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private Long cep;
 	
 	@Column(nullable = false)
@@ -42,7 +43,8 @@ public class EnderecoEntity {
 	
 	public EnderecoEntity() {}
 	
-	public EnderecoEntity(EnderecoEntity endereco) {
+	public EnderecoEntity(EnderecoDTO endereco) {
+
 		BeanUtils.copyProperties(endereco, this);
 	}	
  
@@ -102,7 +104,19 @@ public class EnderecoEntity {
 	public void setPrincipal(boolean isPrincipal) {
 		this.isPrincipal = isPrincipal;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "EnderecoEntity{" +
+				"id=" + id +
+				", cep=" + cep +
+				", logradouro='" + logradouro + '\'' +
+				", numero=" + numero +
+				", cidade='" + cidade + '\'' +
+				", estado='" + estado + '\'' +
+				", isPrincipal=" + isPrincipal +
+				", pessoa=" + pessoa +
+				'}';
+	}
 }
 
